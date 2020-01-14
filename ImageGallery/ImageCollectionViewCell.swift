@@ -13,6 +13,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    @IBOutlet weak var label: UILabel!
     var imageURL: URL? {
         didSet {
             updateViewFromModel()
@@ -28,6 +29,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
                 DispatchQueue.main.async {
                     if let imageData = data, url == self?.imageURL {
                         self?.imageView.image = UIImage(data: imageData)
+                    } else {
+                        self?.label.isHidden = false
                     }
                     self?.activityIndicator.stopAnimating()
                 }

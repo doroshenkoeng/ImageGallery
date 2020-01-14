@@ -37,12 +37,20 @@
                                             <rect key="frame" x="131.5" y="131.5" width="37" height="37"/>
                                             <color key="color" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </activityIndicatorView>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🙁" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a08-HJ-iuC">
+                                            <rect key="frame" x="127.5" y="126" width="45" height="48"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="pbk-M0-dWi" firstAttribute="leading" secondItem="aSu-Yl-2NQ" secondAttribute="leading" id="0bI-1X-OEN"/>
+                                        <constraint firstItem="a08-HJ-iuC" firstAttribute="centerX" secondItem="aSu-Yl-2NQ" secondAttribute="centerX" id="60A-kO-dyt"/>
                                         <constraint firstAttribute="trailing" secondItem="pbk-M0-dWi" secondAttribute="trailing" id="Dog-0V-SI8"/>
                                         <constraint firstItem="DmL-6V-mqn" firstAttribute="centerY" secondItem="aSu-Yl-2NQ" secondAttribute="centerY" id="Gi3-s1-ccy"/>
                                         <constraint firstItem="DmL-6V-mqn" firstAttribute="centerX" secondItem="aSu-Yl-2NQ" secondAttribute="centerX" id="M0o-Ol-PlE"/>
+                                        <constraint firstItem="a08-HJ-iuC" firstAttribute="centerY" secondItem="aSu-Yl-2NQ" secondAttribute="centerY" id="q6y-Gc-nx8"/>
                                         <constraint firstItem="pbk-M0-dWi" firstAttribute="top" secondItem="aSu-Yl-2NQ" secondAttribute="top" id="wos-Jb-lHw"/>
                                         <constraint firstAttribute="bottom" secondItem="pbk-M0-dWi" secondAttribute="bottom" id="zLE-Ih-pE0"/>
                                     </constraints>
@@ -50,8 +58,27 @@
                                 <connections>
                                     <outlet property="activityIndicator" destination="DmL-6V-mqn" id="nVE-6h-1Ch"/>
                                     <outlet property="imageView" destination="pbk-M0-dWi" id="vDD-XJ-iJO"/>
+                                    <outlet property="label" destination="a08-HJ-iuC" id="bhC-GX-Syq"/>
                                     <segue destination="LO4-DA-vEn" kind="show" identifier="Show Image" id="RMj-uy-SPs"/>
                                 </connections>
+                            </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="DropPlaceholderCell" id="It9-jw-ucl">
+                                <rect key="frame" x="362" y="0.0" width="300" height="300"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="066-YC-fnS">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="VHX-Tg-528">
+                                            <rect key="frame" x="131.5" y="131.5" width="37" height="37"/>
+                                            <color key="color" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="VHX-Tg-528" firstAttribute="centerX" secondItem="066-YC-fnS" secondAttribute="centerX" id="pmD-zI-nyr"/>
+                                        <constraint firstItem="VHX-Tg-528" firstAttribute="centerY" secondItem="066-YC-fnS" secondAttribute="centerY" id="tZF-Wz-Om3"/>
+                                    </constraints>
+                                </collectionViewCellContentView>
                             </collectionViewCell>
                         </cells>
                         <connections>
