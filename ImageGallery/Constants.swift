@@ -11,5 +11,6 @@ import UIKit
 struct Constants {
     static let numberOfItemsInRow: CGFloat = 4
     static let minWidthRatio: CGFloat = 0.03
+    static let duration: Double = 0.1
 }
 

@@ -8,7 +8,11 @@
 
 import UIKit
 
-struct Gallery {
-    var name: String
-    var images: [Image]
+class Gallery {
+    var name: String = ""
+    var images: [Image] = []
+    init(name: String, images: [Image]) {
+        self.name = name
+        self.images = images
+    }
 }

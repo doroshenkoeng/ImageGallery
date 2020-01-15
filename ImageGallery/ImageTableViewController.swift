@@ -22,16 +22,26 @@ class ImageTableViewController: UITableViewController {
                 Gallery(name: "Gallery 4", images: [])
             ]
         ]
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        let image1 = Image(url: URL(string: "https://i.pinimg.com/originals/fc/ae/4b/fcae4bb94c4c2a7aba55138c7fac8e5a.jpg")!, aspectRatio: 836 / 1044)
+        let image2 = Image(url: URL(string: "https://www.topdeck.travel/sites/default/files/styles/hero_image_mobile/public/2018-09/HERO%201920x540-Europe-Spain.jpg?itok=hEc5cdOB")!, aspectRatio: 75 / 54)
+        galleries[0][0].images += [image1, image2]
+    }
+    
+    private var lastSelectedRow = IndexPath(row: 0, section: 0)
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        lastSelectedRow = indexPath
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        selectRow(at: lastSelectedRow)
     }
     
     @IBAction func touchAddButton(_ sender: UIBarButtonItem) {
         galleries[0] += [Gallery(name: "Untitled".madeUnique(withRespectTo: galleries[0].map { $0.name }), images: [])]
         tableView.insertRows(at: [IndexPath(row: galleries[0].count - 1, section: 0)], with: .automatic)
+        selectRow(at: IndexPath(row: 0, section: 0))
     }
     
 
@@ -59,6 +69,7 @@ class ImageTableViewController: UITableViewController {
                     if let name = galleryCell.textField.text {
                         self?.galleries[indexPath.section][indexPath.row].name = name
                         self?.tableView.reloadData()
+                        self?.selectRow(at: indexPath)
                     }
                     
                 }
@@ -74,11 +85,6 @@ class ImageTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         section == 1 && galleries[1].count > 0 ? "Recentrly Deleted" : nil
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
     }
 
     /*
@@ -100,7 +106,7 @@ class ImageTableViewController: UITableViewController {
                     tableView.deleteRows(at: [indexPath], with: .fade)
                     tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
                 }) { _ in
-                    self.selectRow(at: IndexPath(row: 0, section: 1))
+                    self.selectRow(at: IndexPath(row: 0, section: 1), with: Constants.duration)
                 }
                 
             case 1:
@@ -108,7 +114,7 @@ class ImageTableViewController: UITableViewController {
                     galleries[1].remove(at: indexPath.row)
                     tableView.deleteRows(at: [indexPath], with: .fade)
                 }) { _ in
-                    self.selectRow(at: IndexPath(row: 0, section: 0))
+                    self.selectRow(at: IndexPath(row: 0, section: 0), with: Constants.duration)
                     if self.galleries[1].count == 0 { tableView.reloadSections(IndexSet(integer: 1), with: .automatic)}
                 }
                 
@@ -119,8 +125,11 @@ class ImageTableViewController: UITableViewController {
         }    
     }
     
-    private func selectRow(at indexPath: IndexPath) {
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+    private func selectRow(at indexPath: IndexPath, with delay: TimeInterval = 0) {
+        Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { (timer) in
+            self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        }
+        
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -131,10 +140,17 @@ class ImageTableViewController: UITableViewController {
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             }) { _ in
-                self.selectRow(at: IndexPath(row: 0, section: 0))
+                self.selectRow(at: IndexPath(row: 0, section: 0), with: Constants.duration)
             }
         }
         return UISwipeActionsConfiguration(actions: [contextualActions])
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if splitViewController?.preferredDisplayMode != .primaryOverlay {
+            splitViewController?.preferredDisplayMode = .primaryOverlay
+        }
     }
 
     /*
@@ -152,14 +168,29 @@ class ImageTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        switch segue.identifier {
+        case "Show Gallery":
+            if let cell = sender as? ImageTableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
+                cvc.gallery = galleries[indexPath.section][indexPath.row]
+                cvc.title = galleries[indexPath.section][indexPath.row].name
+                cvc.collectionView.isUserInteractionEnabled = true
+            }
+        case "Show Recently Deleted Gallery":
+            if let cell = sender as? UITableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
+                cvc.gallery = galleries[indexPath.section][indexPath.row]
+                cvc.title = "Recently Deleted " + galleries[indexPath.section][indexPath.row].name
+                cvc.collectionView.isUserInteractionEnabled = false
+                cvc.collectionView.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+            }
+        default: break
+        }
+        
     }
-    */
+    
 
 }

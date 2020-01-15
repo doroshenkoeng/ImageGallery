@@ -33,6 +33,7 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        splitViewController?.presentsWithGesture = false
         if imageView.image == nil {
             fetchImage()
         }
@@ -71,8 +72,5 @@ class ImageViewController: UIViewController, UIScrollViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        if imageURL == nil {
-//            imageURL = DemoURLs.stanford
-//        }
     }
 }
