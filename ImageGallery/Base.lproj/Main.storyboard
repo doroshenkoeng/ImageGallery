@@ -70,9 +70,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <segue destination="n5r-XD-lIZ" kind="showDetail" identifier="Show Gallery" id="PKD-Tc-BkL"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NNJ-f6-W61" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -250,7 +247,4 @@
             <point key="canvasLocation" x="146.484375" y="309.375"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="PKD-Tc-BkL"/>
-    </inferredMetricsTieBreakers>
 </document>

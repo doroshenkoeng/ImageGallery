@@ -10,28 +10,40 @@ import UIKit
 
 class ImageTableViewController: UITableViewController {
 
-    private var galleries = [[Gallery]]()
+    private var galleries = [[Gallery(name: "Gallery 1", images: [])]]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        galleries = [
-            [
-                Gallery(name: "Gallery 1", images: []), Gallery(name: "Gallery 2", images: []), Gallery(name: "Gallery 3", images: [])
-            ],
-            [
-                Gallery(name: "Gallery 4", images: [])
-            ]
-        ]
-        let image1 = Image(url: URL(string: "https://i.pinimg.com/originals/fc/ae/4b/fcae4bb94c4c2a7aba55138c7fac8e5a.jpg")!, aspectRatio: 836 / 1044)
-        let image2 = Image(url: URL(string: "https://www.topdeck.travel/sites/default/files/styles/hero_image_mobile/public/2018-09/HERO%201920x540-Europe-Spain.jpg?itok=hEc5cdOB")!, aspectRatio: 75 / 54)
-        galleries[0][0].images += [image1, image2]
+        tableView.delegate?.tableView?(tableView, didSelectRowAt: lastSelectedRow)
+    }
+    
+    private var collectionViewController: ImageCollectionViewController? {
+        let navcon = splitViewController?.viewControllers.last as? UINavigationController
+        print("collectionViewController property: \(navcon?.viewControllers.count ?? -1)")
+        return navcon?.viewControllers.first as? ImageCollectionViewController
+    }
+    
+    private func showCollection(at indexPath: IndexPath) {
+        guard let cvc = collectionViewController else { return }
+        lastSelectedRow = indexPath
+        switch indexPath.section {
+        case 0:
+            cvc.gallery = galleries[indexPath.section][indexPath.row]
+            cvc.title = galleries[indexPath.section][indexPath.row].name
+            cvc.collectionView.isUserInteractionEnabled = true
+        case 1:
+            cvc.gallery = galleries[indexPath.section][indexPath.row]
+            cvc.title = "Recently Deleted " + galleries[indexPath.section][indexPath.row].name
+            cvc.collectionView.isUserInteractionEnabled = false
+            cvc.collectionView.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        default: break
+        }
     }
     
     private var lastSelectedRow = IndexPath(row: 0, section: 0)
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        lastSelectedRow = indexPath
-        performSegue(withIdentifier: "Show Gallery", sender: indexPath)
+        showCollection(at: indexPath)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -102,12 +114,17 @@ class ImageTableViewController: UITableViewController {
             // Delete the row from the data source
             switch indexPath.section {
             case 0:
-                tableView.performBatchUpdates({
-                    galleries[1].insert(galleries[0].remove(at: indexPath.row), at: 0)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                    tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
-                }) { _ in
-                    self.selectRow(at: IndexPath(row: 0, section: 1), with: Constants.duration)
+                if galleries.count < 2 {
+                    galleries += [[galleries[0].remove(at: indexPath.row)]]
+                    tableView.reloadData()
+                } else {
+                    tableView.performBatchUpdates({
+                        galleries[1].insert(galleries[0].remove(at: indexPath.row), at: 0)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
+                    }) { _ in
+                        self.selectRow(at: IndexPath(row: 0, section: 1), with: Constants.duration)
+                    }
                 }
                 
             case 1:
@@ -130,7 +147,6 @@ class ImageTableViewController: UITableViewController {
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { (timer) in
             self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         }
-        
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -153,61 +169,5 @@ class ImageTableViewController: UITableViewController {
             splitViewController?.preferredDisplayMode = .primaryOverlay
         }
     }
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        switch segue.identifier {
-//        case "Show Gallery":
-//            if let cell = sender as? ImageTableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
-//                cvc.gallery = galleries[indexPath.section][indexPath.row]
-//                cvc.title = galleries[indexPath.section][indexPath.row].name
-//                cvc.collectionView.isUserInteractionEnabled = true
-//            }
-//        case "Show Recently Deleted Gallery":
-//            if let cell = sender as? UITableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
-//                cvc.gallery = galleries[indexPath.section][indexPath.row]
-//                cvc.title = "Recently Deleted " + galleries[indexPath.section][indexPath.row].name
-//                cvc.collectionView.isUserInteractionEnabled = false
-//                cvc.collectionView.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-//            }
-//        default: break
-//        }
-        guard segue.identifier == "Show Gallery", let indexPath = sender as? IndexPath else { return }
-        switch indexPath.section {
-        case 0:
-            if let cvc = segue.destination.contents as? ImageCollectionViewController {
-                cvc.gallery = galleries[indexPath.section][indexPath.row]
-                cvc.title = galleries[indexPath.section][indexPath.row].name
-                cvc.collectionView.isUserInteractionEnabled = true
-            }
-        case 1:
-            if let cvc = segue.destination.contents as? ImageCollectionViewController {
-                cvc.gallery = galleries[indexPath.section][indexPath.row]
-                cvc.title = "Recently Deleted " + galleries[indexPath.section][indexPath.row].name
-                cvc.collectionView.isUserInteractionEnabled = false
-                cvc.collectionView.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-            }
-        default: break
-        }
-    }
-    
 
 }
