@@ -31,6 +31,7 @@ class ImageTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         lastSelectedRow = indexPath
+        performSegue(withIdentifier: "Show Gallery", sender: indexPath)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -173,15 +174,32 @@ class ImageTableViewController: UITableViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "Show Gallery":
-            if let cell = sender as? ImageTableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
+//        switch segue.identifier {
+//        case "Show Gallery":
+//            if let cell = sender as? ImageTableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
+//                cvc.gallery = galleries[indexPath.section][indexPath.row]
+//                cvc.title = galleries[indexPath.section][indexPath.row].name
+//                cvc.collectionView.isUserInteractionEnabled = true
+//            }
+//        case "Show Recently Deleted Gallery":
+//            if let cell = sender as? UITableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
+//                cvc.gallery = galleries[indexPath.section][indexPath.row]
+//                cvc.title = "Recently Deleted " + galleries[indexPath.section][indexPath.row].name
+//                cvc.collectionView.isUserInteractionEnabled = false
+//                cvc.collectionView.backgroundColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+//            }
+//        default: break
+//        }
+        guard segue.identifier == "Show Gallery", let indexPath = sender as? IndexPath else { return }
+        switch indexPath.section {
+        case 0:
+            if let cvc = segue.destination.contents as? ImageCollectionViewController {
                 cvc.gallery = galleries[indexPath.section][indexPath.row]
                 cvc.title = galleries[indexPath.section][indexPath.row].name
                 cvc.collectionView.isUserInteractionEnabled = true
             }
-        case "Show Recently Deleted Gallery":
-            if let cell = sender as? UITableViewCell, let cvc = segue.destination.contents as? ImageCollectionViewController, let indexPath = tableView.indexPath(for: cell) {
+        case 1:
+            if let cvc = segue.destination.contents as? ImageCollectionViewController {
                 cvc.gallery = galleries[indexPath.section][indexPath.row]
                 cvc.title = "Recently Deleted " + galleries[indexPath.section][indexPath.row].name
                 cvc.collectionView.isUserInteractionEnabled = false
@@ -189,7 +207,6 @@ class ImageTableViewController: UITableViewController {
             }
         default: break
         }
-        
     }
     
 

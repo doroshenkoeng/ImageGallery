@@ -38,7 +38,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="textField" destination="6U3-cc-PR5" id="2VB-ev-j3B"/>
-                                    <segue destination="n5r-XD-lIZ" kind="showDetail" identifier="Show Gallery" id="NsX-rS-SUl"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TitleTableViewCell" textLabel="cdl-4C-XkW" style="IBUITableViewCellStyleDefault" id="BFs-cJ-iKl">
@@ -57,9 +56,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="n5r-XD-lIZ" kind="showDetail" identifier="Show Recently Deleted Gallery" id="qsn-eF-KBQ"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -74,6 +70,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="n5r-XD-lIZ" kind="showDetail" identifier="Show Gallery" id="PKD-Tc-BkL"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NNJ-f6-W61" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -252,6 +251,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qsn-eF-KBQ"/>
+        <segue reference="PKD-Tc-BkL"/>
     </inferredMetricsTieBreakers>
 </document>
